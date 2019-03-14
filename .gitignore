@@ -6,6 +6,8 @@ pictures*
 failed_crop
 labels.txt
 Chess ID Public Data
+processed_data
 *.jpg
 *.jpeg
 *.caffemodel
+.vscode
