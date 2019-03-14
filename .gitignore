@@ -5,3 +5,7 @@ output*
 pictures*
 failed_crop
 labels.txt
+Chess ID Public Data
+*.jpg
+*.jpeg
+*.caffemodel

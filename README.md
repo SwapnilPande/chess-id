@@ -1,15 +1,23 @@
 # Chess ID
+Forked repository to identify chessboard pieces for Chessbot project.
 
-What this repo is meant for: if you would to build your own chesspiece identification models, or if you want to deploy a Chess ID server.
+The purpose of this project is to return the location of all pieces on the chessbot chessboard given a top-down image of the chessbot chessboard. The location of the board will be determined using two OpenCV ArUco markers located at opposite corners of the board. Based on the lcoation and orientation of these markers, each square will be segmented into separate images and inputted to a trained neural network to identify the piece.
 
-## Experiment with your own models
+## Changes from original repository:
 
-First, grab the data: https://www.dropbox.com/s/618l4ddoykotmru/Chess%20ID%20Public%20Data.zip?dl=0
+* Modifying the original board detection algorithm to be more effective. However, it will only work for a chessboard with AruCo markers at the corner for identification (does not generalize to all chessboards like original repository)
 
-My experiments are available in the Jupyter notebook.
+* Porting chesspiece classification neural network to Keras/Tensorflow
 
-## Deploy the Chess ID server
+* Replacing trained model used for transfer learning from AlexNet to Xception
 
-First, grab the Caffe model: https://www.dropbox.com/s/fmlt5ook8ugovid/finetune_chess_iter_5554.caffemodel?dl=0
+* Building python package to predict chessboard piece positions to import into other python projects
 
-Install all dependencies (Caffe, OpenCV, etc.). Edit paths in server.py and then run it.
+* Modularizing the package
+
+* Using pipenv as python package manager
+
+
+## Dataset from original repository
+
+The dataset used to train the model is available at the following link. This dataset was made available by the original author of this repository. https://www.dropbox.com/s/618l4ddoykotmru/Chess%20ID%20Public%20Data.zip?dl=0
