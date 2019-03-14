@@ -1,5 +1,5 @@
 # Chess ID
-Forked repository to identify chessboard pieces for Chessbot project.
+Forked repository to identify chessboard pieces for Chessbot project. Article about original repo: https://medium.com/@daylenyang/building-chess-id-99afa57326cd
 
 The purpose of this project is to return the location of all pieces on the chessbot chessboard given a top-down image of the chessbot chessboard. The location of the board will be determined using two OpenCV ArUco markers located at opposite corners of the board. Based on the lcoation and orientation of these markers, each square will be segmented into separate images and inputted to a trained neural network to identify the piece.
 
