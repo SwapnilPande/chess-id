@@ -11,3 +11,4 @@ processed_data
 *.jpeg
 *.caffemodel
 .vscode
+checkpoints
