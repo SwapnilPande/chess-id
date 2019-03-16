@@ -43,7 +43,6 @@ def generateAugmentedData(dir_dict):
 
     # Create output directories
     shutil.rmtree(dir_dict['output'], True)
-    os.makedirs(dir_dict['intermediate'])
     os.makedirs(dir_dict['output'])
 
     # Subdirectories for each label within input directory

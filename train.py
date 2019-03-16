@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
+from keras.optimizers import SGD
+import shutil, os
 
 import chessIDModel
 
@@ -34,12 +36,12 @@ trainDataGenerator = ImageDataGenerator(rotation_range=270, horizontal_flip=True
 # Define checkpoint callback
 shutil.rmtree("./checkpoints", True)
 os.mkdir("./checkpoints")
-callbacks = [ModelCheckpoint('./checkpoints/chess-id-checkpoint-{epoch:02d}-{train_loss:.2f}.hdf5')]
+callbacks = [ModelCheckpoint('./checkpoints/chess-id-checkpoint-{epoch:02d}-{loss:.2f}.hdf5')]
 
 # Instantiate model
-print(len(categories))
+#sgd = SGD(lr = 0.01, momentum = 0.9)
 model = chessIDModel.getModel(len(categories), (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 3))
-model.compile("adam", loss= "categorical_crossentropy")
+model.compile("adam", loss= "categorical_crossentropy", metrics = ["accuracy"])
 model.summary()
 model.fit_generator(
 			trainDataGenerator,
