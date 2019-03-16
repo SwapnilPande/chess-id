@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
-from keras.optimizers import SGD
+from keras.optimizers import Adam
 import shutil, os
 
 import chessIDModel
@@ -40,8 +40,9 @@ callbacks = [ModelCheckpoint('./checkpoints/chess-id-checkpoint-{epoch:02d}-{los
 
 # Instantiate model
 #sgd = SGD(lr = 0.01, momentum = 0.9)
+adam = Adam(lr = 0.0001)
 model = chessIDModel.getModel(len(categories), (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 3))
-model.compile("adam", loss= "categorical_crossentropy", metrics = ["accuracy"])
+model.compile(adam, loss= "categorical_crossentropy", metrics = ["accuracy"])
 model.summary()
 model.fit_generator(
 			trainDataGenerator,
