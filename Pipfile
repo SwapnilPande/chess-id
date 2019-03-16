@@ -13,7 +13,7 @@ opencv-python = "*"
 scikit-learn = "*"
 scikit-image = "*"
 matplotlib = "*"
-tensorflow = "*"
+tensorflow-gpu = "*"
 
 [requires]
 "python_version" = "3.5"
