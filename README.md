@@ -21,3 +21,6 @@ The purpose of this project is to return the location of all pieces on the chess
 ## Dataset from original repository
 
 The dataset used to train the model is available at the following link. This dataset was made available by the original author of this repository. https://www.dropbox.com/s/618l4ddoykotmru/Chess%20ID%20Public%20Data.zip?dl=0
+
+## Training
+To train the model, first train only the new untrained layers. Then, train all the layers in the VGG model to fine tune the model. The train file supports command line arguments to load a model and to specify the number of layers to train.
