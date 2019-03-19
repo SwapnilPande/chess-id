@@ -3,7 +3,15 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model,load_model
 import shutil, os
 
-modelPath = "./checkpoints/chess-id-checkpoint-15-5.52.hdf5"
+# Set allow growth to train on RTX 2060 card
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+sess = tf.Session(config=config)
+set_session(sess)  # set this TensorFlow session as the default session for Keras
+
+modelPath = "./checkpoints/chess-id-checkpoint-10-0.14.hdf5"
 
 # Image dimension
 SQUARE_SIDE_LENGTH = 227
@@ -12,7 +20,7 @@ SQUARE_SIDE_LENGTH = 227
 TEST_DATASET_SIZE = 185
 
 # Relative directory to data
-testDir = "./processed_data/output_test/"
+testDir = "/data/Chess ID Public Data/output_test/"
 
 # Categories for neural network to predict
 categories = ['bb', 'bk', 'bn', 'bp', 'bq', 'br', 'empty', 'wb', 'wk', 'wn', 'wp', 'wq', 'wr']

@@ -1,37 +1,43 @@
-from keras.applications.xception import Xception
+from keras.applications.vgg16 import VGG16
 from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D, Dropout, Flatten
+from keras.layers import Dense, Dropout, Flatten
+from keras.regularizers import l2
 
-# num_classes is the number of output classes
-def getModel(numClasses, inputDim, trainAllLayers, numLayerToTrain):
+def getModel():
     # Create base pre-trained model
-    baseModel = Xception(weights='imagenet', include_top=False, input_shape = inputDim)
+    baseModel = VGG16(weights='imagenet', include_top=False, input_shape = (227, 227, 3))
+    print(len(baseModel.layers))
 
     # Get output of xception
-    xceptionOutput = baseModel.output
-    #xceptionDropout = Dropout(0.5)(xceptionOutput)
-    xceptionFlat = Flatten()(xceptionOutput)
+    vggOutput = baseModel.output
+    vggDropout = Dropout(0.5)(vggOutput)
+    vggFlat = Flatten()(vggDropout)
 
-    # Layers appended to xception to train
-    chessIDDense = Dense(10, activation='relu')(xceptionFlat)
-    #chessIDDropout = Dropout(0.5)(chessIDDense)
-    chessIDOutput = Dense(numClasses, activation='softmax')(chessIDDense)
+    ## Layers appended to xception to train
+    chessIDDense = Dense(512,
+        activation='relu',
+        kernel_regularizer=l2(0.05)
+    )(vggFlat)
+    chessIDDropout = Dropout(0.5)(chessIDDense)
+    chessIDOutput = Dense(13, activation='softmax')(chessIDDropout)
 
     # Create model object
     model = Model(inputs = baseModel.input, outputs = chessIDOutput)
 
-    print(len(baseModel))
-
-    # Freeze all of the xception layers
-    if(not trainAllLayers):
-        # Disable training of all layers in xception model
-        for layer in baseModel.layers[]:
-            layer.trainable = False
-
-        #Enable last n layers to train
-        for layer in baseModel.layers[-1*numLayerToTrain:]:
-            layer.trainable = True
-    # else, we train all layers in the network, including xception layers
+    for layer in baseModel.layers:
+        layer.trainable = False
 
     return model
+
+def setTrainableLayers(model, trainAllLayers, numLayersToTrain):
+    if(trainAllLayers):
+        for layer in model.layers:
+            layer.trainable = True
+    else:
+        for i in range(0, 19-numLayersToTrain):
+            model.layers[i].trainable = False
+        for i in range(19-numLayersToTrain, 19):
+            model.layers[i].trainable = True
+    return model
+
 

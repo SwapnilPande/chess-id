@@ -9,7 +9,7 @@ The purpose of this project is to return the location of all pieces on the chess
 
 * Porting chesspiece classification neural network to Keras/Tensorflow
 
-* Replacing trained model used for transfer learning from AlexNet to Xception
+* Replacing trained model used for transfer learning from AlexNet to VGG16
 
 * Building python package to predict chessboard piece positions to import into other python projects
 
