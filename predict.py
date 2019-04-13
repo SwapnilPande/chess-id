@@ -1,4 +1,6 @@
+
 import numpy as np
+import cv2
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model,load_model
 import shutil, os
@@ -11,31 +13,25 @@ config.gpu_options.allow_growth = True  # dynamically grow the memory used on th
 sess = tf.Session(config=config)
 set_session(sess)  # set this TensorFlow session as the default session for Keras
 
-modelPath = "./checkpoints/chess-id-checkpoint-10-0.14.hdf5"
+modelPath = "/data/vgg16/checkpoints_tune_all_layers/chess-id-checkpoint-01-0.12-0.98.hdf5"
 
 # Image dimension
 SQUARE_SIDE_LENGTH = 227
 
-# Size of training dataset
-TEST_DATASET_SIZE = 185
-
 # Relative directory to data
-testDir = "/data/Chess ID Public Data/output_test/"
+imagePath = "/data/sample_images/Knight5.png"
+
+frame = cv2.imread(imagePath)
+
+frame = cv2.resize(frame, (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH))
+
+frame = np.expand_dims(frame, axis= 0)
+print(frame.shape)
 
 # Categories for neural network to predict
 categories = ['bb', 'bk', 'bn', 'bp', 'bq', 'br', 'empty', 'wb', 'wk', 'wn', 'wp', 'wq', 'wr']
 
-# Create dataset generator
-batchSize = 32
-testDataGenerator = ImageDataGenerator(rotation_range=270, horizontal_flip=True, rescale=1./255).flow_from_directory(
-    directory = testDir,
-    target_size = (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH),
-    classes = categories,
-)
 # Load Model
 model = load_model(modelPath)
-loss = model.evaluate_generator(testDataGenerator,
-            steps = TEST_DATASET_SIZE // batchSize,
-                        workers = 10
-)
-print(loss)
+out = model.predict(frame)
+print(out)
