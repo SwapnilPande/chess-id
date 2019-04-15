@@ -2,10 +2,10 @@ import os
 import cv2
 
 # Path to directory containing images of chessboards
-dataInputDir = "./Board1/"
+dataInputDir = "./generated_images/validation"
 
 # Path to file containing coordinates for chessboard squares
-coordinatePath = "square_locations.txt"
+coordinatePath = "SquareLocations.txt"
 
 # Directory to store segmented and labelled images
 dataOutputDir = "./output"

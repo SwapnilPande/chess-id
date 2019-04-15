@@ -12,3 +12,4 @@ processed_data
 *.caffemodel
 .vscode
 checkpoints
+generated_images
