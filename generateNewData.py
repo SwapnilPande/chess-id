@@ -45,5 +45,3 @@ for image in boardImages:
 
         # Save image in the correct directory
         cv2.imwrite(filename + "-" + str(i), label)
-
-
