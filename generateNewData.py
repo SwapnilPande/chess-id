@@ -38,6 +38,7 @@ for image in boardImages:
         square = frame[y1:y2,x1:x2,:]
 
         cv2.imshow(str(i), square)
+
         label = raw_input("What chess piece is this?\n")
 
         saveDir = os.path.join(dataOutputDir, label)

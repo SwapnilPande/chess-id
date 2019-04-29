@@ -3,10 +3,13 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model, load_model
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam, SGD
+from keras.applications.vgg16 import preprocess_input
 import shutil, os
 import argparse
 import math
-from models import vgg_with_dense_128
+
+import pickle
+#from models import vgg_with_dense_128
 
 # Set allow growth to train on RTX 2060 card
 import tensorflow as tf
@@ -27,37 +30,42 @@ parser.add_argument("-n", "--num-layers-to-train", help="Specify number of layer
 parser.add_argument("-lr", "--learning-rate", help="Learning rate to use to for adam optimizer", default=0.0001)
 args =  parser.parse_args()
 
+print("lr: " + args.learning_rate)
+print("layers: " + str(args.num_layers_to_train))
+
 
 # Image dimension
 SQUARE_SIDE_LENGTH = 227
 
 # Size of training dataset
-TRAIN_DATASET_SIZE = 41440
-TEST_DATASET_SIZE = 740
+TRAIN_DATASET_SIZE = 46332
+TEST_DATASET_SIZE = 1216
 
 # Relative directories to data
 #trainDir = "/data/Chess ID Public Data/output_train/"
-trainDir = "/data/processed_data/output_train/"
-testDir = "/data/processed_data/output_test/"
+trainDir = "/data/output_train/"
+testDir = "/data/output_test/"
 
 
 # Categories for neural network to learn
 categories = ['bb', 'bk', 'bn', 'bp', 'bq', 'br', 'empty', 'wb', 'wk', 'wn', 'wp', 'wq', 'wr']
 
 # Create dataset generator
-batchSize = 64
+batchSize = 32
 # rotation_range=270, horizontal_flip=True
 trainDataGenerator = ImageDataGenerator(rescale=1./255).flow_from_directory(
     directory = trainDir,
     target_size = (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH),
     classes = categories,
     batch_size = batchSize,
-    shuffle = True)
+    shuffle = True,
+    preprocessing_function = preprocess_input)
     #horizontal_flip=True,
 testDataGenerator = ImageDataGenerator( rescale=1./255).flow_from_directory(
     directory = testDir,
     target_size = (SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH),
     classes = categories,
+    preprocessing_function = preprocess_input
 )
 
 # Define checkpoint callback
@@ -66,8 +74,8 @@ os.mkdir("./checkpoints")
 callbacks = [ModelCheckpoint('./checkpoints/chess-id-checkpoint-{epoch:02d}-{val_loss:.2f}-{val_acc:.2f}.hdf5')]
 
 # Instantiate model
-sgd = SGD(lr = float(args.learning_rate), momentum = 0.9)
-
+#sgd = SGD(lr = float(args.learning_rate), momentum = 0.9)
+adam = Adam(lr = float(args.learning_rate))
 if(args.model is None):
     # Load new model - training of xception layers is disabled by default
     model = chessIDModel.getModel()
@@ -78,10 +86,10 @@ else:
 
 # Set the correct number of trainable layers
 model = chessIDModel.setTrainableLayers(model, args.train_all_layers, int(args.num_layers_to_train))
-model.compile(sgd, loss = "categorical_crossentropy", metrics = ["accuracy"])
+model.compile(adam, loss = "categorical_crossentropy", metrics = ["accuracy"])
 
 model.summary()
-model.fit_generator(
+history = model.fit_generator(
 			trainDataGenerator,
             validation_data = testDataGenerator,
             validation_steps = math.ceil(TEST_DATASET_SIZE/batchSize),
@@ -91,6 +99,11 @@ model.fit_generator(
 			shuffle=True,
             callbacks = callbacks
 		)
+
+# Pickle and save history object to plot learning curve later
+with open('./checkpoints/trainHistory', 'wb') as f:
+    pickle.dump(history.history, f)
+
 # Save final model
 model.save("./checkpoints/finalModel.hdf5")
 

@@ -8,8 +8,8 @@ import cv2
 # import os, glob, skimage, cv2, shutil
 
 # Relative directories to data
-TRAIN_DIRS = {'input': './Chess ID Public Data/output_train/', 'output': './processed_data/output_train/'}
-TEST_DIRS = {'input': './Chess ID Public Data/output_test/',  'output': './processed_data/output_test/'}
+TRAIN_DIRS = {'input': '/mnt/data/ubuntu/chess-id_data/Chess ID Public Data/output_train/', 'output': '/home/swapnil/Documents/mechtronicsfinalproject/processed_data/output_train/'}
+TEST_DIRS = {'input': '/mnt/data/ubuntu/chess-id_data/Chess ID Public Data/output_test/',  'output': '/home/swapnil/Documents/mechtronicsfinalproject/processed_data/output_test/'}
 
 # Image dimension
 SQUARE_SIDE_LENGTH = 227
@@ -52,6 +52,8 @@ def generateAugmentedData(dir_dict):
         os.makedirs(os.path.join(dir_dict['output'], label))
 
     inputPaths = glob.glob(dir_dict['input'] + '*/*.jpg', recursive=True)
+    inputPaths += glob.glob(dir_dict['input'] + '*/*.png', recursive=True)
+    print(glob.glob(dir_dict['input'] + '*/*.png', recursive=True))
     percent = 0
     for i in range(len(inputPaths)):
         # Print completion percentage

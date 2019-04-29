@@ -13,13 +13,13 @@ config.gpu_options.allow_growth = True  # dynamically grow the memory used on th
 sess = tf.Session(config=config)
 set_session(sess)  # set this TensorFlow session as the default session for Keras
 
-modelPath = "/data/vgg16/checkpoints_tune_all_layers/chess-id-checkpoint-01-0.12-0.98.hdf5"
+modelPath = "./checkpoints/chess-id-checkpoint-24-0.03-0.99.hdf5"
 
 # Image dimension
 SQUARE_SIDE_LENGTH = 227
 
 # Relative directory to data
-imagePath = "/data/sample_images/Knight5.png"
+imagePath = "/train/sample_images/Wrook1.png"
 
 frame = cv2.imread(imagePath)
 
